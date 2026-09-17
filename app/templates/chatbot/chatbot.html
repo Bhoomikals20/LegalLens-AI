@@ -1,0 +1,581 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="chat-page">
+
+    <div class="chat-wrapper">
+
+        <!-- Header -->
+
+        <div class="chat-header">
+
+            <div>
+
+                <h1>LegalLens AI Assistant</h1>
+
+                <p>Ask anything about your uploaded documents or legal topics.</p>
+
+            </div>
+
+            <div class="chat-logo">
+
+                <i class="bi bi-stars"></i>
+
+            </div>
+
+        </div>
+
+        <!-- Main Card -->
+
+        <div class="chat-card">
+
+            <!-- Document Selector -->
+
+            <div class="chat-selector">
+
+                <label>Select Document</label>
+
+                <select id="documentSelect">
+
+                    <option value="">Choose a document...</option>
+
+                    {% for doc in documents %}
+
+                    <option value="{{ doc.id }}">
+
+                        {{ doc.original_filename }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <!-- Chat Area -->
+
+            <div id="chatBox" class="chat-box">
+
+                <div class="bot-message">
+
+                    <div class="avatar">
+
+                        <i class="bi bi-stars"></i>
+
+                    </div>
+
+                    <div class="message">
+
+                        <strong>LegalLens AI</strong>
+
+                        <p>Hello {{ username }} 👋
+
+                            I'm your AI legal assistant.
+
+                            I can help you summarize documents,
+
+                            explain clauses, identify risks,
+
+                            and answer questions from your uploaded files.
+
+                        </p>
+
+                        <span>Just now</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Suggested Questions -->
+
+            <div class="suggestions">
+
+                <button onclick="fillQuestion('Summarize this document')">
+
+                    Summarize
+
+                </button>
+
+                <button onclick="fillQuestion('What risks are present?')">
+
+                    Risks
+
+                </button>
+
+                <button onclick="fillQuestion('What clauses are detected?')">
+
+                    Clauses
+
+                </button>
+
+                <button onclick="fillQuestion('What is the governing law?')">
+
+                    Governing Law
+
+                </button>
+
+            </div>
+
+            <!-- Input -->
+
+            <div class="chat-input">
+
+                <textarea
+
+                    id="questionInput"
+
+                    rows="1"
+
+                    placeholder="Ask anything..."
+
+                ></textarea>
+
+                <button onclick="askQuestion()">
+
+                    <i class="bi bi-send-fill"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+.chat-page{
+
+padding:35px;
+
+}
+
+.chat-wrapper{
+
+max-width:1000px;
+
+margin:auto;
+
+}
+
+.chat-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:25px;
+
+}
+
+.chat-header h1{
+
+font-weight:700;
+
+color:#0f172a;
+
+}
+
+.chat-header p{
+
+color:#64748b;
+
+}
+
+.chat-logo{
+
+width:70px;
+
+height:70px;
+
+background:#dbeafe;
+
+border-radius:20px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:30px;
+
+color:#2563eb;
+
+}
+
+.chat-card{
+
+background:white;
+
+border-radius:24px;
+
+padding:25px;
+
+box-shadow:0 20px 50px rgba(0,0,0,.08);
+
+}
+
+.chat-selector{
+
+margin-bottom:20px;
+
+}
+
+.chat-selector label{
+
+font-weight:600;
+
+margin-bottom:8px;
+
+display:block;
+
+}
+
+.chat-selector select{
+
+width:100%;
+
+padding:14px;
+
+border:1px solid #cbd5e1;
+
+border-radius:12px;
+
+}
+
+.chat-box{
+
+background:#f8fafc;
+
+border-radius:18px;
+
+padding:20px;
+
+height:420px;
+
+overflow-y:auto;
+
+display:flex;
+
+flex-direction:column;
+
+gap:18px;
+
+}
+
+.bot-message,.user-message{
+
+display:flex;
+
+gap:12px;
+
+}
+
+.user-message{
+
+justify-content:flex-end;
+
+}
+
+.avatar{
+
+width:42px;
+
+height:42px;
+
+background:#2563eb;
+
+color:white;
+
+border-radius:50%;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:18px;
+
+flex-shrink:0;
+
+}
+
+.user-avatar{
+
+background:#0f172a;
+
+}
+
+.message{
+
+background:white;
+
+padding:15px 18px;
+
+border-radius:18px;
+
+max-width:75%;
+
+box-shadow:0 6px 18px rgba(0,0,0,.06);
+
+}
+
+.user-message .message{
+
+background:#2563eb;
+
+color:white;
+
+}
+
+.message strong{
+
+display:block;
+
+margin-bottom:6px;
+
+}
+
+.message span{
+
+font-size:12px;
+
+opacity:.7;
+
+}
+
+.suggestions{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:10px;
+
+margin:18px 0;
+
+}
+
+.suggestions button{
+
+border:none;
+
+background:#eef4ff;
+
+color:#2563eb;
+
+padding:10px 16px;
+
+border-radius:999px;
+
+font-size:14px;
+
+cursor:pointer;
+
+}
+
+.chat-input{
+
+display:flex;
+
+gap:12px;
+
+align-items:flex-end;
+
+}
+
+.chat-input textarea{
+
+flex:1;
+
+padding:14px;
+
+border-radius:14px;
+
+border:1px solid #cbd5e1;
+
+resize:none;
+
+}
+
+.chat-input button{
+
+width:52px;
+
+height:52px;
+
+border:none;
+
+border-radius:14px;
+
+background:#2563eb;
+
+color:white;
+
+font-size:20px;
+
+}
+
+.typing{
+
+display:flex;
+
+gap:6px;
+
+padding:14px;
+
+}
+
+.typing span{
+
+width:8px;
+
+height:8px;
+
+background:#64748b;
+
+border-radius:50%;
+
+animation:bounce 1.2s infinite;
+
+}
+
+.typing span:nth-child(2){
+
+animation-delay:.2s;
+
+}
+
+.typing span:nth-child(3){
+
+animation-delay:.4s;
+
+}
+
+@keyframes bounce{
+
+0%,80%,100%{transform:translateY(0);}
+
+40%{transform:translateY(-6px);}
+
+}
+
+</style>
+
+<script>
+
+function fillQuestion(text){
+
+document.getElementById("questionInput").value=text;
+
+}
+
+function currentTime(){
+
+return new Date().toLocaleTimeString([],{
+
+hour:"2-digit",
+
+minute:"2-digit"
+
+});
+
+}
+
+async function askQuestion(){
+
+const input=document.getElementById("questionInput");
+
+const question=input.value.trim();
+
+const documentId=document.getElementById("documentSelect").value;
+
+if(!question)return;
+
+const chat=document.getElementById("chatBox");
+
+chat.innerHTML+=`
+<div class="user-message">
+<div class="message">
+<strong>You</strong>
+<p>${question}</p>
+<span>${currentTime()}</span>
+</div>
+<div class="avatar user-avatar"><i class="bi bi-person"></i></div>
+</div>`;
+
+chat.innerHTML+=`
+<div id="typing" class="bot-message">
+<div class="avatar"><i class="bi bi-stars"></i></div>
+<div class="message typing">
+<span></span><span></span><span></span>
+</div>
+</div>`;
+
+chat.scrollTop=chat.scrollHeight;
+
+input.value="";
+
+const response=await fetch("/chat/ask",{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/x-www-form-urlencoded"
+
+},
+
+body:new URLSearchParams({
+
+question:question,
+
+document_id:documentId
+
+})
+
+});
+
+const data=await response.json();
+
+document.getElementById("typing").remove();
+
+chat.innerHTML+=`
+<div class="bot-message">
+<div class="avatar"><i class="bi bi-stars"></i></div>
+<div class="message">
+<strong>LegalLens AI</strong>
+<p>${data.answer}</p>
+<span>${currentTime()}</span>
+</div>
+</div>`;
+
+chat.scrollTop=chat.scrollHeight;
+
+}
+
+document.getElementById("questionInput").addEventListener("keydown",function(e){
+
+if(e.key==="Enter"&&!e.shiftKey){
+
+e.preventDefault();
+
+askQuestion();
+
+}
+
+});
+
+</script>
+
+{% endblock %}

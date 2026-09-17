@@ -1,0 +1,96 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="page-shell">
+
+    <div class="page-header">
+        <h2>My Documents</h2>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} mb-4">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="content-panel mb-4">
+        <h4 class="mb-3">Upload New Document</h4>
+
+        <form method="POST" enctype="multipart/form-data" class="upload-form">
+            <input
+                type="file"
+                class="form-control form-control-lg mb-3"
+                name="document"
+                accept=".pdf,.docx,.txt,.png,.jpg,.jpeg"
+                required>
+
+            <button class="btn btn-primary">
+                Upload
+            </button>
+        </form>
+    </div>
+
+    <div class="content-panel">
+        <h4 class="mb-3">Uploaded Documents</h4>
+
+        {% if documents %}
+
+        <div class="table-responsive">
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>Document</th>
+                        <th>Type</th>
+                        <th>Size</th>
+                        <th>Status</th>
+                        <th>Uploaded</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for doc in documents %}
+                <tr>
+                    <td>{{ doc.original_filename }}</td>
+                    <td>{{ doc.file_type.upper() }}</td>
+                    <td>{{ (doc.file_size / 1024)|round(1) }} KB</td>
+                    <td>
+                        <span class="badge bg-success">
+                            {{ doc.status }}
+                        </span>
+                    </td>
+                    <td>{{ doc.upload_date.strftime('%d-%m-%Y') }}</td>
+                    <td>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a href="{{ url_for('upload.preview', document_id=doc.id) }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                Preview
+                            </a>
+                            <a href="{{ url_for('analysis.analyze', document_id=doc.id) }}" class="btn btn-sm btn-success">
+                                Analyze
+                            </a>
+                            <a href="{{ url_for('upload.delete_document', document_id=doc.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this document?');">
+                                Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+            <div class="alert alert-info">
+                No documents uploaded yet.
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

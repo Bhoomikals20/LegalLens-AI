@@ -1,0 +1,74 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="auth-shell">
+
+    <div class="auth-card auth-card-register">
+
+        <div class="auth-brand">
+            <i class="bi bi-person-badge-fill"></i>
+            <span>LegalLens AI</span>
+        </div>
+
+        <div class="auth-header text-center mb-4">
+            <h2>Create Account</h2>
+            <p>Start your legal document workflow with AI.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} auth-alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" class="auth-form">
+
+            <div class="auth-field">
+                <label class="form-label">Full Name</label>
+                <input
+                    class="form-control form-control-lg"
+                    name="full_name"
+                    placeholder="Enter your full name"
+                    required>
+            </div>
+
+            <div class="auth-field">
+                <label class="form-label">Email</label>
+                <input
+                    type="email"
+                    class="form-control form-control-lg"
+                    name="email"
+                    placeholder="Enter your email"
+                    required>
+            </div>
+
+            <div class="auth-field">
+                <label class="form-label">Password</label>
+                <input
+                    type="password"
+                    class="form-control form-control-lg"
+                    name="password"
+                    placeholder="Create a password"
+                    required>
+            </div>
+
+            <button class="btn btn-primary w-100 btn-lg auth-submit">
+                Register
+            </button>
+        </form>
+
+        <div class="auth-footer text-center mt-4">
+            <p class="auth-login-text">Already have an account?</p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary w-100 auth-secondary-btn">
+                Login
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

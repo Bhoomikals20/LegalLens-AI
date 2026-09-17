@@ -1,0 +1,589 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="d-flex">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <i class="bi bi-shield-check"></i>
+
+            <span>LegalLens AI</span>
+
+        </div>
+
+
+        <ul>
+
+            <li class="active">
+
+                <a href="{{ url_for('dashboard.dashboard') }}">
+
+                    <i class="bi bi-grid"></i>
+
+                    Dashboard
+
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="{{ url_for('upload.upload') }}">
+
+                    <i class="bi bi-cloud-upload"></i>
+
+                    Upload
+
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="{{ url_for('upload.upload') }}">
+
+                    <i class="bi bi-file-earmark-text"></i>
+
+                    Documents
+
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="{{ url_for('analysis.analysis_home') }}">
+    <i class="bi bi-search"></i>
+    Analysis
+                </a>
+
+            </li>
+
+
+            <li>
+                <a href="{{ url_for('compare.compare') }}">
+                    <i class="bi bi-files"></i>
+                    Compare
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class="bi bi-file-earmark-bar-graph"></i>
+                    Reports
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('chatbot.chat') }}"
+                class="btn btn-outline-primary">
+                AI Chat
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class="bi bi-gear"></i>
+                    Settings
+                </a>
+            </li>
+
+
+            <li>
+
+                <a href="{{ url_for('auth.logout') }}">
+
+                    <i class="bi bi-box-arrow-right"></i>
+
+                    Logout
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </aside>
+
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-content">
+
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <h2>
+
+                Welcome, {{ current_user.full_name }}
+
+            </h2>
+
+
+            <div>
+
+                <i class="bi bi-bell fs-4 me-3"></i>
+
+                <i class="bi bi-person-circle fs-3"></i>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= DASHBOARD CARDS ================= -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- DOCUMENTS -->
+
+            <div
+                class="dashboard-card dashboard-card-clickable"
+                role="button"
+                tabindex="0"
+                aria-label="Open documents list"
+                onclick="openDashboardModal('documentsModal')"
+                onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openDashboardModal('documentsModal'); }">
+
+                <h3>
+
+                    Documents
+
+                </h3>
+
+
+                <h1>
+
+                    {{ document_count }}
+
+                </h1>
+
+
+                {% if document_count > 0 %}
+
+                    <p>
+
+                        View your uploaded documents
+
+                    </p>
+
+                {% else %}
+
+                    <p>
+
+                        No documents uploaded
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- RISK SCORE -->
+
+            <div
+                class="dashboard-card dashboard-card-clickable"
+                role="button"
+                tabindex="0"
+                aria-label="Open risk score panel"
+                onclick="openDashboardModal('riskModal')"
+                onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openDashboardModal('riskModal'); }">
+
+                <h3>
+
+                    Risk Score
+
+                </h3>
+
+
+                <h1>
+
+                    --
+
+                </h1>
+
+
+                <p>
+
+                    Upload a contract
+
+                </p>
+
+            </div>
+
+
+
+            <!-- AI CHATS -->
+
+            <div
+                class="dashboard-card dashboard-card-clickable"
+                role="button"
+                tabindex="0"
+                aria-label="Open AI chat panel"
+                onclick="openDashboardModal('chatModal')"
+                onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openDashboardModal('chatModal'); }">
+
+                <h3>
+
+                    AI Chats
+
+                </h3>
+
+
+                <h1>
+
+                    0
+
+                </h1>
+
+
+                <p>
+
+                    Start asking questions
+
+                </p>
+
+            </div>
+
+
+
+            <!-- DEADLINES -->
+
+            <div
+                class="dashboard-card dashboard-card-clickable"
+                role="button"
+                tabindex="0"
+                aria-label="Open deadlines panel"
+                onclick="openDashboardModal('deadlinesModal')"
+                onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openDashboardModal('deadlinesModal'); }">
+
+                <h3>
+
+                    Deadlines
+
+                </h3>
+
+
+                <h1>
+
+                    0
+
+                </h1>
+
+
+                <p>
+
+                    No reminders
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================= QUICK ACTIONS ================= -->
+
+        <div class="dashboard-card mt-4 quick-actions-card">
+
+            <h3>
+
+                Quick Actions
+
+            </h3>
+
+
+            <div class="quick-actions mt-3">
+
+                <a
+                    href="{{ url_for('upload.upload') }}"
+                    class="btn btn-primary">
+                    <i class="bi bi-cloud-upload"></i>
+                    Upload Document
+                </a>
+
+                <a
+                    href="{{ url_for('compare.compare') }}"
+                    class="btn btn-outline-primary">
+                    <i class="bi bi-files"></i>
+                    Compare Contracts
+                </a>
+
+                <a
+                    href="{{ url_for('chatbot.chat') }}"
+                    class="btn btn-outline-primary">
+                    <i class="bi bi-chat-dots"></i>
+                    AI Chat
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- DASHBOARD MODALS -->
+<!-- ===================================================== -->
+
+<div id="documentsModal" class="dashboard-modal">
+    <div class="dashboard-modal-box">
+
+        <button type="button"
+                class="dashboard-close"
+                onclick="closeDashboardModal('documentsModal')">
+            &times;
+        </button>
+
+        <h2>
+            <i class="bi bi-file-earmark-text"></i>
+            My Documents
+        </h2>
+
+        <p class="documents-subtitle">
+            Select a document to open it.
+        </p>
+
+        <div class="documents-list">
+
+            {% if documents and documents|length > 0 %}
+
+                {% for document in documents %}
+
+                <a href="{{ url_for('upload.preview', document_id=document.id) }}"
+                   target="_blank"
+                   class="document-popup-item">
+
+                    <div class="document-popup-icon">
+
+                        {% if document.file_type|lower == "pdf" %}
+                            <i class="bi bi-file-earmark-pdf"></i>
+
+                        {% elif document.file_type|lower in ["jpg","jpeg","png"] %}
+                            <i class="bi bi-file-earmark-image"></i>
+
+                        {% elif document.file_type|lower == "docx" %}
+                            <i class="bi bi-file-earmark-word"></i>
+
+                        {% else %}
+                            <i class="bi bi-file-earmark-text"></i>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="document-popup-info">
+
+                        <strong>{{ document.original_filename }}</strong>
+
+                        <span>
+                            {{ document.file_type|upper }}
+                            •
+                            {{ "%.1f"|format(document.file_size/1024) }} KB
+                        </span>
+
+                    </div>
+
+                    <i class="bi bi-box-arrow-up-right document-arrow"></i>
+
+                </a>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-documents">
+
+                    <i class="bi bi-folder2-open"></i>
+
+                    <h4>No documents yet</h4>
+
+                    <p>Upload a document to see it here.</p>
+
+                    <a href="{{ url_for('upload.upload') }}"
+                       class="btn btn-primary">
+                        Upload Document
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Risk Score -->
+
+<div id="riskModal" class="dashboard-modal">
+
+    <div class="dashboard-modal-box small-modal-box">
+
+        <button type="button"
+                class="dashboard-close"
+                onclick="closeDashboardModal('riskModal')">
+            &times;
+        </button>
+
+        <div class="modal-content-icon">
+            <i class="bi bi-shield-check"></i>
+        </div>
+
+        <h3>Risk Score</h3>
+
+        <p>
+            Upload a contract to generate a risk overview and identify important issues.
+        </p>
+
+        <a href="{{ url_for('upload.upload') }}"
+           class="btn btn-primary modal-action-btn">
+            Upload Contract
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- AI Chat -->
+
+<div id="chatModal" class="dashboard-modal">
+
+    <div class="dashboard-modal-box small-modal-box">
+
+        <button type="button"
+                class="dashboard-close"
+                onclick="closeDashboardModal('chatModal')">
+            &times;
+        </button>
+
+        <div class="modal-content-icon">
+            <i class="bi bi-chat-dots"></i>
+        </div>
+
+        <h3>AI Chat</h3>
+
+        <p>
+            Ask legal questions about clauses, obligations, notices and risks.
+        </p>
+
+        <button type="button"
+                class="btn btn-primary modal-action-btn"
+                onclick="closeDashboardModal('chatModal')">
+            Start Chat
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- Deadlines -->
+
+<div id="deadlinesModal" class="dashboard-modal">
+
+    <div class="dashboard-modal-box small-modal-box">
+
+        <button type="button"
+                class="dashboard-close"
+                onclick="closeDashboardModal('deadlinesModal')">
+            &times;
+        </button>
+
+        <div class="modal-content-icon">
+            <i class="bi bi-calendar-event"></i>
+        </div>
+
+        <h3>Deadlines</h3>
+
+        <p>
+            Track upcoming renewals, compliance terms and reminders.
+        </p>
+
+        <button type="button"
+                class="btn btn-primary modal-action-btn"
+                onclick="closeDashboardModal('deadlinesModal')">
+            Add Reminder
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function openDashboardModal(modalId){
+
+    const modal=document.getElementById(modalId);
+
+    if(modal){
+        modal.classList.add("active");
+        document.body.classList.add("dashboard-modal-open");
+    }
+
+}
+
+function closeDashboardModal(modalId){
+
+    const modal=document.getElementById(modalId);
+
+    if(modal){
+        modal.classList.remove("active");
+    }
+
+    if(document.querySelectorAll(".dashboard-modal.active").length===0){
+        document.body.classList.remove("dashboard-modal-open");
+    }
+
+}
+
+document.addEventListener("click",function(event){
+
+    if(event.target.classList.contains("dashboard-modal")){
+        closeDashboardModal(event.target.id);
+    }
+
+});
+
+document.addEventListener("keydown",function(event){
+
+    if(event.key==="Escape"){
+
+        document.querySelectorAll(".dashboard-modal.active")
+        .forEach(function(modal){
+
+            closeDashboardModal(modal.id);
+
+        });
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+from flask import Flask
+from config import Config
+from app.extensions import db, bcrypt, login_manager
+
+
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
+
+    db.init_app(app)
+    bcrypt.init_app(app)
+    login_manager.init_app(app)
+
+    from app.models.user import User
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
+    from app.routes.main import main_bp
+    from app.routes.auth import auth_bp
+    from app.routes.dashboard import dashboard_bp
+    from app.routes.upload import upload_bp
+    from app.routes.analysis import analysis_bp
+    from app.routes.compare import compare_bp
+    from app.routes.chatbot import chatbot_bp
+
+    app.register_blueprint(main_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(dashboard_bp)
+    app.register_blueprint(upload_bp)
+    app.register_blueprint(analysis_bp)
+    app.register_blueprint(compare_bp)
+    app.register_blueprint(chatbot_bp)
+
+    with app.app_context():
+        db.create_all()
+
+    return app

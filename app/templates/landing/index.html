@@ -1,0 +1,1515 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<!-- ===================== NAVBAR ===================== -->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+
+    <div class="container">
+
+        <a class="navbar-brand fw-bold fs-3" href="{{ url_for('main.home') }}">
+
+            <i class="bi bi-shield-check text-primary"></i>
+
+            LegalLens AI
+
+        </a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarMenu"
+            aria-controls="navbarMenu"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMenu">
+
+            <ul class="navbar-nav ms-auto align-items-center">
+
+                <!-- FEATURES -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link px-3"
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#featuresModal">
+
+                        Features
+
+                    </a>
+
+                </li>
+
+
+                <!-- WORKFLOW -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link px-3"
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#workflowModal">
+
+                        Workflow
+
+                    </a>
+
+                </li>
+
+
+                <!-- ABOUT -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link px-3"
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#aboutModal">
+
+                        About
+
+                    </a>
+
+                </li>
+
+
+                <!-- LOGIN -->
+
+                <li class="nav-item ms-3">
+
+                    <a
+                        href="{{ url_for('auth.login') }}"
+                        class="btn btn-primary">
+
+                        Login
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- ===================== HERO SECTION ===================== -->
+
+<section class="hero-section">
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <!-- HERO TEXT -->
+
+            <div class="col-lg-6">
+
+                <span class="hero-badge">
+
+                    AI Powered Legal Intelligence
+
+                </span>
+
+
+                <h1 class="hero-title">
+
+                    Understand<br>
+
+                    Legal Documents<br>
+
+                    in Minutes
+
+                </h1>
+
+
+                <p class="hero-text">
+
+                    Upload contracts, agreements, scanned PDFs or images.
+
+                    LegalLens AI summarizes documents, detects clauses,
+
+                    identifies legal risks, explains difficult language,
+
+                    compares contracts and answers questions instantly.
+
+                </p>
+
+
+                <div class="hero-buttons">
+
+                    <!-- UPLOAD → LOGIN -->
+
+                    <a
+                        href="{{ url_for('auth.login') }}"
+                        class="btn btn-primary">
+
+                        Upload Document
+
+                    </a>
+
+
+                    <!-- LEARN MORE → POPUP -->
+
+                    <a
+                        href="#"
+                        class="btn btn-outline-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#learnMoreModal">
+
+                        Learn More
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- HERO IMAGE -->
+
+            <div class="col-lg-6">
+
+                <div class="hero-card">
+
+                    <div class="scan-line"></div>
+
+                    <img
+                        src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900"
+                        class="img-fluid rounded-4"
+                        alt="Legal document analysis">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ===================== FEATURES SECTION ===================== -->
+
+<section class="py-5">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2 class="fw-bold">
+
+                Everything You Need
+
+            </h2>
+
+            <p class="text-muted">
+
+                Professional AI tools for analysing legal documents.
+
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <!-- AI SUMMARY -->
+
+            <div class="col-md-4">
+
+                <a
+                    href="{{ url_for('auth.login') }}"
+                    class="feature-card text-decoration-none d-block">
+
+                    <i class="bi bi-file-earmark-text feature-icon"></i>
+
+                    <h4>
+
+                        AI Summary
+
+                    </h4>
+
+                    <p>
+
+                        Convert lengthy legal language into plain English.
+
+                    </p>
+
+                </a>
+
+            </div>
+
+
+            <!-- RISK ANALYSIS -->
+
+            <div class="col-md-4">
+
+                <a
+                    href="{{ url_for('auth.login') }}"
+                    class="feature-card text-decoration-none d-block">
+
+                    <i class="bi bi-exclamation-triangle feature-icon"></i>
+
+                    <h4>
+
+                        Risk Analysis
+
+                    </h4>
+
+                    <p>
+
+                        Detect risky clauses and missing protections.
+
+                    </p>
+
+                </a>
+
+            </div>
+
+
+            <!-- AI CHAT -->
+
+            <div class="col-md-4">
+
+                <a
+                    href="{{ url_for('auth.login') }}"
+                    class="feature-card text-decoration-none d-block">
+
+                    <i class="bi bi-chat-dots feature-icon"></i>
+
+                    <h4>
+
+                        AI Chat
+
+                    </h4>
+
+                    <p>
+
+                        Ask questions directly about your uploaded document.
+
+                    </p>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ========================================================= -->
+<!-- ===================== FEATURES MODAL ==================== -->
+<!-- ========================================================= -->
+
+<div
+    class="modal fade"
+    id="featuresModal"
+    tabindex="-1"
+    aria-labelledby="featuresModalLabel"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+
+
+            <div class="modal-header">
+
+                <h3
+                    class="modal-title fw-bold"
+                    id="featuresModalLabel">
+
+                    <i class="bi bi-stars text-primary me-2"></i>
+
+                    LegalLens AI Features
+
+                </h3>
+
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close">
+
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <p class="text-muted mb-4">
+
+                    LegalLens AI provides intelligent tools to help
+                    users understand, analyse and compare legal documents.
+
+                </p>
+
+
+                <div class="row g-4">
+
+
+                    <!-- SUMMARY -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-card h-100">
+
+                            <i class="bi bi-file-earmark-text"></i>
+
+                            <h4>
+
+                                AI Summary
+
+                            </h4>
+
+                            <p>
+
+                                Convert lengthy legal documents into
+                                concise and understandable summaries.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- RISK -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-card h-100">
+
+                            <i class="bi bi-shield-exclamation"></i>
+
+                            <h4>
+
+                                Risk Analysis
+
+                            </h4>
+
+                            <p>
+
+                                Identify potentially risky clauses,
+                                obligations and missing protections.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CLAUSE DETECTION -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-card h-100">
+
+                            <i class="bi bi-search"></i>
+
+                            <h4>
+
+                                Clause Detection
+
+                            </h4>
+
+                            <p>
+
+                                Detect and organize important clauses
+                                within legal documents.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- AI CHAT -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-card h-100">
+
+                            <i class="bi bi-chat-dots"></i>
+
+                            <h4>
+
+                                AI Chat
+
+                            </h4>
+
+                            <p>
+
+                                Ask questions directly about your
+                                uploaded legal document.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- COMPARISON -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-card h-100">
+
+                            <i class="bi bi-files"></i>
+
+                            <h4>
+
+                                Contract Comparison
+
+                            </h4>
+
+                            <p>
+
+                                Compare contracts and identify
+                                important differences.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- REPORTS -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-card h-100">
+
+                            <i class="bi bi-file-earmark-bar-graph"></i>
+
+                            <h4>
+
+                                Analysis Reports
+
+                            </h4>
+
+                            <p>
+
+                                Present important document findings
+                                in a structured report.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <a
+                    href="{{ url_for('auth.login') }}"
+                    class="btn btn-primary">
+
+                    Get Started
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================================================= -->
+<!-- ===================== WORKFLOW MODAL ==================== -->
+<!-- ========================================================= -->
+
+<div
+    class="modal fade"
+    id="workflowModal"
+    tabindex="-1"
+    aria-labelledby="workflowModalLabel"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+
+
+            <div class="modal-header">
+
+                <h3
+                    class="modal-title fw-bold"
+                    id="workflowModalLabel">
+
+                    <i class="bi bi-diagram-3 text-primary me-2"></i>
+
+                    How LegalLens AI Works
+
+                </h3>
+
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close">
+
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+
+                <!-- STEP 1 -->
+
+                <div class="workflow-step mb-4">
+
+                    <div class="workflow-number">
+
+                        01
+
+                    </div>
+
+                    <div>
+
+                        <h4>
+
+                            Upload Document
+
+                        </h4>
+
+                        <p class="text-muted">
+
+                            Upload contracts, agreements, PDFs,
+                            DOCX files or scanned documents.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 2 -->
+
+                <div class="workflow-step mb-4">
+
+                    <div class="workflow-number">
+
+                        02
+
+                    </div>
+
+                    <div>
+
+                        <h4>
+
+                            Document Processing
+
+                        </h4>
+
+                        <p class="text-muted">
+
+                            Text is extracted from digital documents
+                            and OCR is used for scanned content.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 3 -->
+
+                <div class="workflow-step mb-4">
+
+                    <div class="workflow-number">
+
+                        03
+
+                    </div>
+
+                    <div>
+
+                        <h4>
+
+                            AI Understanding
+
+                        </h4>
+
+                        <p class="text-muted">
+
+                            The document content is processed to
+                            identify important information and clauses.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 4 -->
+
+                <div class="workflow-step mb-4">
+
+                    <div class="workflow-number">
+
+                        04
+
+                    </div>
+
+                    <div>
+
+                        <h4>
+
+                            Risk Analysis
+
+                        </h4>
+
+                        <p class="text-muted">
+
+                            Potential risks, obligations and missing
+                            protections are identified.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 5 -->
+
+                <div class="workflow-step">
+
+                    <div class="workflow-number">
+
+                        05
+
+                    </div>
+
+                    <div>
+
+                        <h4>
+
+                            Results
+
+                        </h4>
+
+                        <p class="text-muted">
+
+                            Users receive summaries, analysis,
+                            comparisons and document-based answers.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <a
+                    href="{{ url_for('auth.login') }}"
+                    class="btn btn-primary">
+
+                    Try LegalLens AI
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================================================= -->
+<!-- ======================= ABOUT MODAL ===================== -->
+<!-- ========================================================= -->
+
+<div
+    class="modal fade"
+    id="aboutModal"
+    tabindex="-1"
+    aria-labelledby="aboutModalLabel"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+
+
+            <div class="modal-header">
+
+                <h3
+                    class="modal-title fw-bold"
+                    id="aboutModalLabel">
+
+                    <i class="bi bi-shield-check text-primary me-2"></i>
+
+                    About LegalLens AI
+
+                </h3>
+
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close">
+
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+
+                <h4 class="fw-bold mb-3">
+
+                    Making Legal Documents Easier to Understand
+
+                </h4>
+
+
+                <p class="text-muted">
+
+                    Legal documents can be lengthy, technical and
+                    difficult to understand.
+
+                    LegalLens AI is designed to make document
+                    understanding faster and more accessible
+                    through intelligent document processing.
+
+                </p>
+
+
+                <hr>
+
+
+                <h5 class="fw-bold">
+
+                    Our Purpose
+
+                </h5>
+
+
+                <p class="text-muted">
+
+                    LegalLens AI combines document processing,
+                    OCR and artificial intelligence to help users
+                    understand important information within
+                    legal documents.
+
+                </p>
+
+
+                <h5 class="fw-bold mt-4">
+
+                    Our Focus
+
+                </h5>
+
+
+                <p class="text-muted">
+
+                    We focus on clarity, efficiency and awareness
+                    by simplifying complex legal information and
+                    highlighting important clauses and risks.
+
+                </p>
+
+
+                <div class="alert alert-info mt-4">
+
+                    <i class="bi bi-info-circle me-2"></i>
+
+                    LegalLens AI is a document analysis and
+                    assistance system. It does not replace
+                    qualified legal advice.
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================================================= -->
+<!-- ==================== LEARN MORE MODAL =================== -->
+<!-- ========================================================= -->
+
+<div
+    class="modal fade"
+    id="learnMoreModal"
+    tabindex="-1"
+    aria-labelledby="learnMoreModalLabel"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+
+
+            <div class="modal-header">
+
+                <h3
+                    class="modal-title fw-bold"
+                    id="learnMoreModalLabel">
+
+                    <i class="bi bi-lightbulb text-primary me-2"></i>
+
+                    Learn More About LegalLens AI
+
+                </h3>
+
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close">
+
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <p class="text-muted">
+
+                    LegalLens AI is designed as an end-to-end
+                    legal document intelligence platform.
+
+                </p>
+
+
+                <div class="row g-4 mt-2">
+
+
+                    <!-- UPLOAD -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-card h-100">
+
+                            <i class="bi bi-upload"></i>
+
+                            <h4>
+
+                                Upload Documents
+
+                            </h4>
+
+                            <p>
+
+                                Upload digital or scanned
+                                legal documents.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EXTRACTION -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-card h-100">
+
+                            <i class="bi bi-file-text"></i>
+
+                            <h4>
+
+                                Extract Content
+
+                            </h4>
+
+                            <p>
+
+                                Extract text from digital
+                                documents and scanned pages.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ANALYSIS -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-card h-100">
+
+                            <i class="bi bi-stars"></i>
+
+                            <h4>
+
+                                Analyse Documents
+
+                            </h4>
+
+                            <p>
+
+                                Analyse clauses, obligations
+                                and important information.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- RISK -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-card h-100">
+
+                            <i class="bi bi-shield-check"></i>
+
+                            <h4>
+
+                                Identify Risks
+
+                            </h4>
+
+                            <p>
+
+                                Highlight potentially risky
+                                clauses and missing protections.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- QUESTIONS -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-card h-100">
+
+                            <i class="bi bi-chat-square-text"></i>
+
+                            <h4>
+
+                                Ask Questions
+
+                            </h4>
+
+                            <p>
+
+                                Ask questions about your
+                                uploaded document.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- COMPARE -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-card h-100">
+
+                            <i class="bi bi-files"></i>
+
+                            <h4>
+
+                                Compare Documents
+
+                            </h4>
+
+                            <p>
+
+                                Compare contracts and identify
+                                meaningful differences.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <a
+                    href="{{ url_for('auth.login') }}"
+                    class="btn btn-primary">
+
+                    Start Using LegalLens AI
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= FEATURES POPUP ================= -->
+
+<div id="featuresModal" class="ll-modal">
+
+    <div class="ll-modal-box">
+
+        <button
+            type="button"
+            class="ll-close"
+            onclick="closeLegalLensModal('featuresModal')">
+            &times;
+        </button>
+
+        <h2>
+            <i class="bi bi-stars text-primary"></i>
+            LegalLens AI Features
+        </h2>
+
+        <p class="text-muted">
+            Powerful tools designed to help users understand
+            and analyse legal documents.
+        </p>
+
+        <div class="row g-4 mt-3">
+
+            <div class="col-md-6">
+                <div class="info-card">
+                    <i class="bi bi-file-earmark-text"></i>
+                    <h4>AI Summary</h4>
+                    <p>
+                        Convert lengthy legal documents into
+                        concise and understandable summaries.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-card">
+                    <i class="bi bi-shield-exclamation"></i>
+                    <h4>Risk Analysis</h4>
+                    <p>
+                        Identify risky clauses, obligations
+                        and missing protections.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-card">
+                    <i class="bi bi-search"></i>
+                    <h4>Clause Detection</h4>
+                    <p>
+                        Identify and organize important
+                        clauses in legal documents.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-card">
+                    <i class="bi bi-chat-dots"></i>
+                    <h4>AI Chat</h4>
+                    <p>
+                        Ask questions directly about your
+                        uploaded document.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-4">
+
+            <a
+                href="{{ url_for('auth.login') }}"
+                class="btn btn-primary">
+
+                Get Started
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= WORKFLOW POPUP ================= -->
+
+<div id="workflowModal" class="ll-modal">
+
+    <div class="ll-modal-box">
+
+        <button
+            type="button"
+            class="ll-close"
+            onclick="closeLegalLensModal('workflowModal')">
+            &times;
+        </button>
+
+        <h2>
+            <i class="bi bi-diagram-3 text-primary"></i>
+            How LegalLens AI Works
+        </h2>
+
+        <div class="workflow-list mt-4">
+
+            <div class="workflow-step">
+                <div class="workflow-number">01</div>
+                <div>
+                    <h4>Upload</h4>
+                    <p>
+                        Upload contracts, agreements, PDFs,
+                        DOCX files or scanned documents.
+                    </p>
+                </div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">02</div>
+                <div>
+                    <h4>Document Processing</h4>
+                    <p>
+                        Text is extracted from digital
+                        documents and OCR processes scanned
+                        content.
+                    </p>
+                </div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">03</div>
+                <div>
+                    <h4>AI Understanding</h4>
+                    <p>
+                        The extracted content is processed
+                        to understand important information
+                        and clauses.
+                    </p>
+                </div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">04</div>
+                <div>
+                    <h4>Risk Analysis</h4>
+                    <p>
+                        Potential risks, obligations and
+                        missing protections are identified.
+                    </p>
+                </div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">05</div>
+                <div>
+                    <h4>Results</h4>
+                    <p>
+                        Users receive summaries, analysis,
+                        comparisons and document-based answers.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= ABOUT POPUP ================= -->
+
+<div id="aboutModal" class="ll-modal">
+
+    <div class="ll-modal-box">
+
+        <button
+            type="button"
+            class="ll-close"
+            onclick="closeLegalLensModal('aboutModal')">
+            &times;
+        </button>
+
+        <h2>
+            <i class="bi bi-shield-check text-primary"></i>
+            About LegalLens AI
+        </h2>
+
+        <h4 class="mt-4">
+            Making Legal Documents Easier to Understand
+        </h4>
+
+        <p>
+            Legal documents can be lengthy, technical and
+            difficult to understand.
+        </p>
+
+        <p>
+            LegalLens AI is designed to make document
+            understanding faster and more accessible through
+            document processing, OCR and intelligent analysis.
+        </p>
+
+        <hr>
+
+        <h5>Our Purpose</h5>
+
+        <p>
+            LegalLens AI helps users identify important
+            information within legal documents without
+            manually reviewing every page.
+        </p>
+
+        <h5 class="mt-4">Our Focus</h5>
+
+        <p>
+            Clarity, efficiency, clause identification,
+            risk awareness and document-based assistance.
+        </p>
+
+        <div class="alert alert-info mt-4">
+
+            <i class="bi bi-info-circle"></i>
+
+            LegalLens AI is a document analysis assistance
+            system and does not replace qualified legal advice.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= LEARN MORE POPUP ================= -->
+
+<div id="learnMoreModal" class="ll-modal">
+
+    <div class="ll-modal-box">
+
+        <button
+            type="button"
+            class="ll-close"
+            onclick="closeLegalLensModal('learnMoreModal')">
+            &times;
+        </button>
+
+        <h2>
+            <i class="bi bi-lightbulb text-primary"></i>
+            Learn More About LegalLens AI
+        </h2>
+
+        <p class="text-muted mt-3">
+            LegalLens AI provides an end-to-end workflow
+            for processing and understanding legal documents.
+        </p>
+
+        <div class="row g-4 mt-3">
+
+            <div class="col-md-6">
+
+                <div class="info-card">
+                    <i class="bi bi-upload"></i>
+                    <h4>Upload</h4>
+                    <p>
+                        Upload contracts, agreements, PDFs,
+                        DOCX files and scanned documents.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="info-card">
+                    <i class="bi bi-file-text"></i>
+                    <h4>Extract</h4>
+                    <p>
+                        Extract text from digital and
+                        scanned documents.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="info-card">
+                    <i class="bi bi-stars"></i>
+                    <h4>Analyse</h4>
+                    <p>
+                        Analyse clauses, obligations and
+                        important document information.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="info-card">
+                    <i class="bi bi-shield-check"></i>
+                    <h4>Identify Risks</h4>
+                    <p>
+                        Highlight potentially risky clauses
+                        and missing protections.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mt-4">
+
+            <a
+                href="{{ url_for('auth.login') }}"
+                class="btn btn-primary">
+
+                Start Using LegalLens AI
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
+<script>
+
+function openLegalLensModal(modalId) {
+
+    const modal = document.getElementById(modalId);
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.add("active");
+
+    document.body.classList.add("ll-modal-open");
+
+}
+
+
+function closeLegalLensModal(modalId) {
+
+    const modal = document.getElementById(modalId);
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove("active");
+
+    document.body.classList.remove("ll-modal-open");
+
+}
+
+
+/* Close when clicking outside popup */
+
+document.addEventListener("click", function(event) {
+
+    if (event.target.classList.contains("ll-modal")) {
+
+        closeLegalLensModal(event.target.id);
+
+    }
+
+});
+
+
+/* Close with ESC */
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+
+        document.querySelectorAll(".ll-modal.active")
+            .forEach(function(modal) {
+
+                closeLegalLensModal(modal.id);
+
+            });
+
+    }
+
+});
+
+</script>

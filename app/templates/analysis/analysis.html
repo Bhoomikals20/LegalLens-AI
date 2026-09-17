@@ -1,0 +1,590 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="analysis-page">
+
+    <div class="analysis-container">
+
+        <!-- ================= HEADER ================= -->
+
+        <div class="analysis-header">
+
+            <div>
+
+                <a
+                    href="{{ url_for('upload.upload') }}"
+                    class="analysis-back"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    My Documents
+                </a>
+
+                <h1 class="analysis-title">
+                    {{ document.original_filename }}
+                </h1>
+
+                <p class="analysis-subtitle">
+                    AI Powered Document Analysis
+                </p>
+
+            </div>
+
+            <div class="analysis-file-icon">
+                <i class="bi bi-file-earmark-text"></i>
+            </div>
+
+        </div>
+
+
+        <!-- ================= DOCUMENT PROCESSING ================= -->
+
+        <div class="analysis-card">
+
+            <div class="analysis-card-header">
+
+                <div>
+
+                    <span class="analysis-label">
+                        DOCUMENT PROCESSING
+                    </span>
+
+                    <h2>
+                        Extraction Complete
+                    </h2>
+
+                </div>
+
+                {% if ocr_used %}
+
+                    <span class="analysis-status warning">
+                        <i class="bi bi-camera"></i>
+                        OCR Used
+                    </span>
+
+                {% else %}
+
+                    <span class="analysis-status success">
+                        <i class="bi bi-check-circle"></i>
+                        Text Extracted
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="extraction-grid">
+
+                <div class="extraction-item">
+
+                    <div class="extraction-icon">
+                        <i class="bi bi-file-earmark"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Pages</span>
+
+                        <strong>{{ pages }}</strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="extraction-item">
+
+                    <div class="extraction-icon">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Extraction</span>
+
+                        <strong>{{ extraction_method }}</strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="extraction-item">
+
+                    <div class="extraction-icon">
+                        <i class="bi bi-camera"></i>
+                    </div>
+
+                    <div>
+
+                        <span>OCR Pages</span>
+
+                        <strong>{{ ocr_pages }}</strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= AI ANALYSIS ================= -->
+
+        <div class="analysis-card">
+
+            <div class="analysis-card-header">
+
+                <div>
+
+                    <span class="analysis-label">
+                        AI DOCUMENT ANALYSIS
+                    </span>
+
+                    <h2>
+                        Intelligent Insights
+                    </h2>
+
+                </div>
+
+                <span class="analysis-status success">
+                    <i class="bi bi-stars"></i>
+                    Complete
+                </span>
+
+            </div>
+
+            <!-- Document Classification -->
+
+            <div class="ai-section">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <div>
+
+                        <h3 class="mb-1">
+                            <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                            Document Classification
+                        </h3>
+
+                        <p class="text-muted mb-0">
+                            Automatically identified document type
+                        </p>
+
+                    </div>
+
+                    <span class="badge bg-primary fs-6 px-3 py-2">
+                        {{ classification.confidence }}%
+                    </span>
+
+                </div>
+
+                <div class="border rounded-4 p-4">
+
+                    <h4 class="text-primary">
+                        {{ classification.type }}
+                    </h4>
+
+                    <p class="mb-0">
+                        {{ classification.description }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <hr class="my-4">
+
+
+            <!-- Summary -->
+
+            <div class="ai-section">
+
+                <h3 class="mb-3">
+                    <i class="bi bi-file-text text-primary me-2"></i>
+                    AI Summary
+                </h3>
+
+                <div class="border rounded-4 p-4 bg-light">
+
+                    <p class="mb-0" style="line-height:1.8;">
+                        {{ summary }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <hr class="my-4">
+
+
+            <!-- Key Information -->
+
+            <div class="ai-section">
+
+                <h3 class="mb-3">
+                    <i class="bi bi-info-circle text-primary me-2"></i>
+                    Key Information
+                </h3>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <div class="border rounded-4 p-4 h-100">
+
+                            <h5>
+                                <i class="bi bi-calendar-event text-primary me-2"></i>
+                                Dates
+                            </h5>
+
+                            {% if key_information.dates %}
+
+                                <ul class="mb-0">
+
+                                    {% for date in key_information.dates %}
+
+                                        <li>{{ date }}</li>
+
+                                    {% endfor %}
+
+                                </ul>
+
+                            {% else %}
+
+                                <p class="text-muted mb-0">
+                                    No dates detected.
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="border rounded-4 p-4 h-100">
+
+                            <h5>
+                                <i class="bi bi-currency-rupee text-primary me-2"></i>
+                                Monetary Amounts
+                            </h5>
+
+                            {% if key_information.amounts %}
+
+                                <ul class="mb-0">
+
+                                    {% for amount in key_information.amounts %}
+
+                                        <li>{{ amount }}</li>
+
+                                    {% endfor %}
+
+                                </ul>
+
+                            {% else %}
+
+                                <p class="text-muted mb-0">
+                                    No monetary values detected.
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <hr class="my-4">
+
+
+            <!-- Clause Detection -->
+
+            <div class="ai-section">
+
+                <h3 class="mb-3">
+                    <i class="bi bi-list-check text-primary me-2"></i>
+                    Detected Clauses
+                </h3>
+
+                {% if clauses %}
+
+                    <div class="row g-3">
+
+                        {% for clause in clauses %}
+
+                            <div class="col-md-6">
+
+                                <div class="border rounded-4 p-4 h-100">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                                        <h5 class="mb-0">
+                                            {{ clause.name }}
+                                        </h5>
+
+                                        <span class="badge bg-success">
+                                            Detected
+                                        </span>
+
+                                    </div>
+
+                                    <small class="text-muted">
+
+                                        Keywords:
+
+                                        {{ clause.matches|join(", ") }}
+
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-secondary mb-0">
+
+                        No recognised legal clauses were detected.
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <hr class="my-4">
+
+
+            <!-- Risk Analysis -->
+
+            <div class="ai-section">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <div>
+
+                        <h3 class="mb-1">
+                            <i class="bi bi-shield-exclamation text-primary me-2"></i>
+                            Risk Analysis
+                        </h3>
+
+                        <p class="text-muted mb-0">
+                            Potential legal concerns detected
+                        </p>
+
+                    </div>
+
+                    {% if risk_score is not none %}
+
+                        <div class="text-end">
+
+                            <div class="fs-3 fw-bold text-primary">
+                                {{ risk_score }}
+                            </div>
+
+                            <small>/100</small>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                {% if risk_score is none %}
+
+                    <div class="alert alert-info mb-0">
+
+                        This document has been identified as a
+                        <strong>{{ classification.type }}</strong>.
+                        Contract-specific risk analysis is not applicable.
+
+                    </div>
+
+                {% elif risks %}
+
+                    <div class="row g-3">
+
+                        {% for risk in risks %}
+
+                            <div class="col-md-6">
+
+                                <div class="border rounded-4 p-4 h-100">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                                        <h5 class="mb-0">
+                                            {{ risk.name }}
+                                        </h5>
+
+                                        {% if risk.level=="High" %}
+
+                                            <span class="badge bg-danger">
+                                                High
+                                            </span>
+
+                                        {% elif risk.level=="Medium" %}
+
+                                            <span class="badge bg-warning text-dark">
+                                                Medium
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="badge bg-success">
+                                                Low
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                    <p class="mb-0">
+                                        {{ risk.reason }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-success mb-0">
+
+                        No predefined legal risk patterns were detected.
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <hr class="my-4">
+
+
+            <!-- Recommendations -->
+
+            <div class="ai-section">
+
+                <h3 class="mb-3">
+                    <i class="bi bi-lightbulb text-primary me-2"></i>
+                    Recommendations
+                </h3>
+
+                <div class="border rounded-4 p-4 bg-light">
+
+                    <ul class="mb-0">
+
+                        <li>Review the highlighted clauses before signing.</li>
+
+                        <li>Verify important dates and monetary values.</li>
+
+                        <li>Confirm obligations assigned to each party.</li>
+
+                        <li>Seek professional legal advice for high-risk agreements.</li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <hr class="my-4">
+
+
+            <!-- Disclaimer -->
+
+            <div class="analysis-disclaimer d-flex align-items-start gap-3">
+
+                <i class="bi bi-info-circle text-primary fs-4"></i>
+
+                <p class="mb-0 text-muted">
+
+                    This AI analysis is generated automatically to assist with
+                    document review. It should not be considered a substitute
+                    for professional legal advice.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= EXTRACTED TEXT ================= -->
+
+        <div class="analysis-card">
+
+            <div class="analysis-card-header">
+
+                <div>
+
+                    <span class="analysis-label">
+                        SOURCE TEXT
+                    </span>
+
+                    <h2>
+                        Extracted Text
+                    </h2>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="btn btn-outline-primary"
+                    onclick="copyExtractedText()"
+                >
+                    <i class="bi bi-copy"></i>
+                    Copy
+                </button>
+
+            </div>
+
+            <div
+                id="extractedText"
+                class="extracted-text"
+            >{{ extracted_text }}</div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function copyExtractedText() {
+
+    const text =
+        document.getElementById(
+            "extractedText"
+        ).innerText;
+
+    navigator.clipboard.writeText(text);
+
+}
+
+</script>
+
+{% endblock %}

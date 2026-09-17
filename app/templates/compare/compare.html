@@ -1,0 +1,650 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="compare-page">
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="compare-header">
+
+        <a
+            href="{{ url_for('dashboard.dashboard') }}"
+            class="back-link"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Back to Dashboard
+        </a>
+
+        <div class="compare-title">
+
+            <div class="compare-title-icon">
+                <i class="bi bi-files"></i>
+            </div>
+
+            <div>
+
+                <h1>
+                    Compare Contracts
+                </h1>
+
+                <p>
+                    Compare two uploaded legal documents
+                    and identify important differences.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= SELECT DOCUMENTS ================= -->
+
+    <div class="compare-card">
+
+        <div class="compare-card-header">
+
+            <h2>
+                Select Documents
+            </h2>
+
+            <p>
+                Choose two documents from your uploaded files.
+            </p>
+
+        </div>
+
+
+        {% if documents|length >= 2 %}
+
+        <form
+            method="POST"
+            action="{{ url_for('compare.compare') }}"
+        >
+
+            <div class="compare-select-grid">
+
+
+                <!-- DOCUMENT 1 -->
+
+                <div class="document-select-box">
+
+                    <div class="select-icon">
+
+                        <i class="bi bi-file-earmark-text"></i>
+
+                    </div>
+
+                    <label for="document1">
+                        Document 1
+                    </label>
+
+                    <select
+                        name="document1"
+                        id="document1"
+                        required
+                    >
+
+                        <option value="">
+                            Select first document
+                        </option>
+
+                        {% for document in documents %}
+
+                        <option
+                            value="{{ document.id }}"
+                            {% if document1 and document1.id == document.id %}
+                            selected
+                            {% endif %}
+                        >
+
+                            {{ document.original_filename }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- VS -->
+
+                <div class="compare-vs">
+
+                    <span>
+                        VS
+                    </span>
+
+                </div>
+
+
+                <!-- DOCUMENT 2 -->
+
+                <div class="document-select-box">
+
+                    <div class="select-icon">
+
+                        <i class="bi bi-file-earmark-text"></i>
+
+                    </div>
+
+                    <label for="document2">
+                        Document 2
+                    </label>
+
+                    <select
+                        name="document2"
+                        id="document2"
+                        required
+                    >
+
+                        <option value="">
+                            Select second document
+                        </option>
+
+                        {% for document in documents %}
+
+                        <option
+                            value="{{ document.id }}"
+                            {% if document2 and document2.id == document.id %}
+                            selected
+                            {% endif %}
+                        >
+
+                            {{ document.original_filename }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="compare-action">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary compare-button"
+                >
+
+                    <i class="bi bi-files"></i>
+
+                    Compare Documents
+
+                </button>
+
+            </div>
+
+        </form>
+
+
+        {% else %}
+
+        <div class="no-documents">
+
+            <i class="bi bi-file-earmark-x"></i>
+
+            <h3>
+                Not Enough Documents
+            </h3>
+
+            <p>
+                Upload at least two documents before
+                comparing them.
+            </p>
+
+            <a
+                href="{{ url_for('upload.upload') }}"
+                class="btn btn-primary"
+            >
+
+                <i class="bi bi-cloud-upload"></i>
+
+                Upload Documents
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         REAL COMPARISON RESULT
+    ================================================= -->
+
+    {% if comparison %}
+
+    <div class="comparison-result">
+
+
+        <!-- RESULT HEADER -->
+
+        <div class="result-header">
+
+            <div>
+
+                <span class="result-label">
+                    COMPARISON RESULT
+                </span>
+
+                <h2>
+                    Document Differences
+                </h2>
+
+            </div>
+
+            <span class="comparison-status">
+
+                <i class="bi bi-check-circle"></i>
+
+                Analysis Complete
+
+            </span>
+
+        </div>
+
+
+        <!-- DOCUMENT NAMES -->
+
+        <div class="comparison-documents">
+
+
+            <div class="result-document">
+
+                <i class="bi bi-file-earmark-text"></i>
+
+                <div>
+
+                    <span>
+                        Document 1
+                    </span>
+
+                    <strong>
+                        {{ document1.original_filename }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="result-vs">
+                VS
+            </div>
+
+
+            <div class="result-document">
+
+                <i class="bi bi-file-earmark-text"></i>
+
+                <div>
+
+                    <span>
+                        Document 2
+                    </span>
+
+                    <strong>
+                        {{ document2.original_filename }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= SIMILARITY ================= -->
+
+        <div class="comparison-summary">
+
+            <div class="similarity-card">
+
+                <div class="summary-icon">
+                    <i class="bi bi-percent"></i>
+                </div>
+
+                <div>
+
+                    <span>
+                        Text Similarity
+                    </span>
+
+                    <strong>
+                        {{ comparison.similarity }}%
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="similarity-card">
+
+                <div class="summary-icon">
+                    <i class="bi bi-plus-circle"></i>
+                </div>
+
+                <div>
+
+                    <span>
+                        Added
+                    </span>
+
+                    <strong>
+                        {{ comparison.added_count }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="similarity-card">
+
+                <div class="summary-icon">
+                    <i class="bi bi-dash-circle"></i>
+                </div>
+
+                <div>
+
+                    <span>
+                        Removed
+                    </span>
+
+                    <strong>
+                        {{ comparison.removed_count }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="similarity-card">
+
+                <div class="summary-icon">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+
+                <div>
+
+                    <span>
+                        Modified
+                    </span>
+
+                    <strong>
+                        {{ comparison.modified_count }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= DOCUMENT STATISTICS ================= -->
+
+        <div class="comparison-stats">
+
+            <h3>
+                Document Statistics
+            </h3>
+
+
+            <div class="stats-grid">
+
+                <div class="stats-document">
+
+                    <h4>
+                        {{ document1.original_filename }}
+                    </h4>
+
+                    <p>
+                        <strong>
+                            {{ comparison.document1.words }}
+                        </strong>
+                        words
+                    </p>
+
+                    <p>
+                        <strong>
+                            {{ comparison.document1.paragraphs }}
+                        </strong>
+                        text blocks
+                    </p>
+
+                    <p>
+                        Extraction:
+                        {{ comparison.document1.method }}
+                    </p>
+
+                </div>
+
+
+                <div class="stats-document">
+
+                    <h4>
+                        {{ document2.original_filename }}
+                    </h4>
+
+                    <p>
+                        <strong>
+                            {{ comparison.document2.words }}
+                        </strong>
+                        words
+                    </p>
+
+                    <p>
+                        <strong>
+                            {{ comparison.document2.paragraphs }}
+                        </strong>
+                        text blocks
+                    </p>
+
+                    <p>
+                        Extraction:
+                        {{ comparison.document2.method }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= CHANGES ================= -->
+
+        <div class="changes-section">
+
+            <div class="changes-heading">
+
+                <div>
+
+                    <span class="result-label">
+                        CONTENT ANALYSIS
+                    </span>
+
+                    <h3>
+                        Detected Changes
+                    </h3>
+
+                </div>
+
+                <span class="change-count">
+                    {{ comparison.total_changes }}
+                    changes
+                </span>
+
+            </div>
+
+
+            {% if comparison.changes %}
+
+
+            {% for change in comparison.changes %}
+
+            <div
+                class="change-card change-{{ change.type }}"
+            >
+
+                <div class="change-card-header">
+
+                    {% if change.type == "added" %}
+
+                        <span class="change-badge added">
+                            <i class="bi bi-plus"></i>
+                            Added
+                        </span>
+
+                    {% elif change.type == "removed" %}
+
+                        <span class="change-badge removed">
+                            <i class="bi bi-dash"></i>
+                            Removed
+                        </span>
+
+                    {% else %}
+
+                        <span class="change-badge modified">
+                            <i class="bi bi-pencil"></i>
+                            Modified
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                {% if change.type == "added" %}
+
+                    <div class="change-content added-content">
+
+                        <span>
+                            Added in Document 2
+                        </span>
+
+                        <p>
+                            {{ change.new }}
+                        </p>
+
+                    </div>
+
+
+                {% elif change.type == "removed" %}
+
+                    <div class="change-content removed-content">
+
+                        <span>
+                            Removed from Document 2
+                        </span>
+
+                        <p>
+                            {{ change.old }}
+                        </p>
+
+                    </div>
+
+
+                {% else %}
+
+                    <div class="modified-grid">
+
+                        <div class="change-content removed-content">
+
+                            <span>
+                                Document 1
+                            </span>
+
+                            <p>
+                                {{ change.old }}
+                            </p>
+
+                        </div>
+
+
+                        <div class="change-arrow">
+
+                            <i class="bi bi-arrow-right"></i>
+
+                        </div>
+
+
+                        <div class="change-content added-content">
+
+                            <span>
+                                Document 2
+                            </span>
+
+                            <p>
+                                {{ change.new }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+
+            {% else %}
+
+            <div class="no-changes">
+
+                <i class="bi bi-check-circle"></i>
+
+                <h3>
+                    No Textual Differences Found
+                </h3>
+
+                <p>
+                    The extracted text from both documents
+                    is identical.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ================= EXTRACTION INFO ================= -->
+
+        <div class="comparison-info">
+
+            <i class="bi bi-info-circle"></i>
+
+            <p>
+                This comparison is based on the text extracted
+                from both documents. Scanned documents and images
+                use Tesseract OCR, so OCR errors can affect the
+                comparison results.
+            </p>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
