@@ -44,5 +44,5 @@ run.py
 
 **Bhoomika L S**
 
-* BE IT (CSE), MRIT
+* BE (CSE), MRIT
 * GitHub: Bhoomikals20
