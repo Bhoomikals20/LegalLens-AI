@@ -8,13 +8,14 @@ from flask_login import current_user, login_required
 from PIL import Image, ImageOps
 
 from app.models.document import Document
-
 from app.services.ai.classifier import classify_document
+from app.services.ai.recommendation import generate_recommendations
 from app.services.ai.summarizer import (
     generate_summary,
     extract_key_information,
 )
 from app.services.ai.clause_detector import detect_clauses
+from app.services.ai.missing_clause import detect_missing_clauses
 from app.services.ai.risk_analysis import (
     analyze_risks,
     calculate_risk_score,
@@ -260,7 +261,7 @@ def analyze_file(file_path):
 
 
 # ==========================================================
-# ANALYSIS PAGE
+# ANALYSIS HOME
 # ==========================================================
 
 
@@ -274,7 +275,15 @@ def analysis_home():
         .all()
     )
 
-    return render_template("analysis/analysis_home.html", documents=documents)
+    return render_template(
+        "analysis/analysis_home.html",
+        documents=documents,
+    )
+
+
+# ==========================================================
+# ANALYZE DOCUMENT
+# ==========================================================
 
 
 @analysis_bp.route("/analysis/<int:document_id>")
@@ -303,29 +312,27 @@ def analyze(document_id):
 
     if not extracted_text:
 
-        extracted_text = "No readable text could be extracted " "from this document."
+        extracted_text = "No readable text could be extracted from this document."
 
     # ======================================================
     # AI MODULES
     # ======================================================
 
-    # Document Classification
     classification = classify_document(extracted_text)
 
     document_type = classification["type"]
     classification_confidence = classification["confidence"]
     classification_description = classification["description"]
 
-    # Summary
     summary = generate_summary(extracted_text)
 
-    # Key Information
     key_information = extract_key_information(extracted_text)
 
-    # Clause Detection
     clauses = detect_clauses(extracted_text)
 
-    # Risk Analysis
+    # NEW FEATURE
+    missing_clauses = detect_missing_clauses(extracted_text)
+
     legal_documents = {
         "Contract / Agreement",
         "Will / Testament",
@@ -344,23 +351,24 @@ def analyze(document_id):
         risks = []
         risk_score = None
 
-    # Risk Level
-
     if risk_score is None:
-
         risk_level = "Not Applicable"
 
     elif risk_score >= 60:
-
         risk_level = "High"
 
     elif risk_score >= 30:
-
         risk_level = "Medium"
 
     else:
-
         risk_level = "Low"
+
+    recommendations = generate_recommendations(
+        document_type,
+        risk_score,
+        missing_clauses,
+        risks,
+    )
 
     # ======================================================
     # Render
@@ -384,7 +392,9 @@ def analyze(document_id):
         summary=summary,
         key_information=key_information,
         clauses=clauses,
+        missing_clauses=missing_clauses,
         risks=risks,
         risk_score=risk_score,
         risk_level=risk_level,
+        recommendations=recommendations,
     )

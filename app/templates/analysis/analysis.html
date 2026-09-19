@@ -480,6 +480,74 @@
 
             <hr class="my-4">
 
+            <!-- Missing Clauses -->
+
+<div class="analysis-card">
+
+    <div class="analysis-card-header">
+
+        <div>
+
+            <span class="analysis-label">
+                MISSING CLAUSES
+            </span>
+
+            <h2>
+                Recommended Additions
+            </h2>
+
+        </div>
+
+    </div>
+
+    {% if missing_clauses %}
+
+        <div class="risk-list">
+
+            {% for clause in missing_clauses %}
+
+            <div class="risk-item">
+
+                <div class="risk-left">
+
+                    <span class="risk-icon medium">
+                        <i class="bi bi-exclamation-circle"></i>
+                    </span>
+
+                    <div>
+
+                        <h4>{{ clause.name }}</h4>
+
+                        <p>{{ clause.importance }}</p>
+
+                    </div>
+
+                </div>
+
+                <span class="risk-badge medium">
+                    Missing
+                </span>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <i class="bi bi-check-circle-fill"></i>
+
+            <h4>No important clauses appear to be missing.</h4>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
 
             <!-- Recommendations -->
 
