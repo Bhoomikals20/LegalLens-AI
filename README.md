@@ -6,6 +6,8 @@
 ![Flask](https://img.shields.io/badge/Flask-Backend-black?logo=flask)
 ![MySQL](https://img.shields.io/badge/MySQL-Database-blue?logo=mysql)
 ![Git](https://img.shields.io/badge/Git-Version_Control-orange?logo=git)
+=======
+>>>>>>> origin/main
 
 # LegalLens AI – AI-Powered Legal Document Analyzer
 
