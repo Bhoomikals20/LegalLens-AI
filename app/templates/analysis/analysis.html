@@ -2,654 +2,377 @@
 
 {% block content %}
 
-<div class="analysis-page">
+<div class="analysis-dashboard">
 
-    <div class="analysis-container">
+```
+<!-- LEFT SIDEBAR -->
 
-        <!-- ================= HEADER ================= -->
+<aside class="analysis-sidebar">
 
-        <div class="analysis-header">
+    <a href="{{ url_for('upload.upload') }}" class="analysis-back">
+        <i class="bi bi-arrow-left"></i> My Documents
+    </a>
 
-            <div>
+    <div class="sidebar-file">
+        <div class="sidebar-icon">
+            <i class="bi bi-file-earmark-text"></i>
+        </div>
 
-                <a
-                    href="{{ url_for('upload.upload') }}"
-                    class="analysis-back"
-                >
-                    <i class="bi bi-arrow-left"></i>
-                    My Documents
-                </a>
+        <h3>{{ document.original_filename }}</h3>
+        <p>{{ document_type }}</p>
+    </div>
 
-                <h1 class="analysis-title">
-                    {{ document.original_filename }}
-                </h1>
+    <div class="risk-circle">
+        <div class="risk-number">
+            {% if risk_score is not none %}
+                {{ risk_score }}
+            {% else %}
+                --
+            {% endif %}
+        </div>
 
-                <p class="analysis-subtitle">
-                    AI Powered Document Analysis
-                </p>
+        <small>{{ risk_level }}</small>
+    </div>
 
-            </div>
+    <div class="sidebar-stats">
 
-            <div class="analysis-file-icon">
-                <i class="bi bi-file-earmark-text"></i>
+        <div class="stat-row">
+            <span>Pages</span>
+            <strong>{{ pages }}</strong>
+        </div>
+
+        <div class="stat-row">
+            <span>Confidence</span>
+            <strong>{{ classification_confidence }}%</strong>
+        </div>
+
+        <div class="stat-row">
+            <span>OCR</span>
+            <strong>{% if ocr_used %}Yes{% else %}No{% endif %}</strong>
+        </div>
+
+    </div>
+
+</aside>
+
+<!-- RIGHT CONTENT -->
+
+<main class="analysis-main">
+
+    <div class="analysis-tabs">
+
+        <button class="tab-btn active" data-tab="overview">
+            <i class="bi bi-grid"></i> Overview
+        </button>
+
+        <button class="tab-btn" data-tab="risks">
+            <i class="bi bi-shield-exclamation"></i> Risks
+        </button>
+
+        <button class="tab-btn" data-tab="clauses">
+            <i class="bi bi-list-check"></i> Clauses
+        </button>
+
+        <button class="tab-btn" data-tab="text">
+            <i class="bi bi-file-text"></i> Source Text
+        </button>
+
+    </div>
+
+    <!-- OVERVIEW -->
+
+    <section id="overview" class="tab-content active">
+
+        <div class="analysis-card">
+
+            <h2>AI Summary</h2>
+
+            <div class="summary-box">
+                {{ summary }}
             </div>
 
         </div>
 
-
-        <!-- ================= DOCUMENT PROCESSING ================= -->
-
         <div class="analysis-card">
 
-            <div class="analysis-card-header">
+            <h2>Document Classification</h2>
+
+            <div class="classification-card">
 
                 <div>
 
-                    <span class="analysis-label">
-                        DOCUMENT PROCESSING
-                    </span>
-
-                    <h2>
-                        Extraction Complete
-                    </h2>
+                    <h3>{{ classification.type }}</h3>
+                    <p>{{ classification.description }}</p>
 
                 </div>
 
-                {% if ocr_used %}
-
-                    <span class="analysis-status warning">
-                        <i class="bi bi-camera"></i>
-                        OCR Used
-                    </span>
-
-                {% else %}
-
-                    <span class="analysis-status success">
-                        <i class="bi bi-check-circle"></i>
-                        Text Extracted
-                    </span>
-
-                {% endif %}
-
-            </div>
-
-
-            <div class="extraction-grid">
-
-                <div class="extraction-item">
-
-                    <div class="extraction-icon">
-                        <i class="bi bi-file-earmark"></i>
-                    </div>
-
-                    <div>
-
-                        <span>Pages</span>
-
-                        <strong>{{ pages }}</strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="extraction-item">
-
-                    <div class="extraction-icon">
-                        <i class="bi bi-cpu"></i>
-                    </div>
-
-                    <div>
-
-                        <span>Extraction</span>
-
-                        <strong>{{ extraction_method }}</strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="extraction-item">
-
-                    <div class="extraction-icon">
-                        <i class="bi bi-camera"></i>
-                    </div>
-
-                    <div>
-
-                        <span>OCR Pages</span>
-
-                        <strong>{{ ocr_pages }}</strong>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- ================= AI ANALYSIS ================= -->
-
-        <div class="analysis-card">
-
-            <div class="analysis-card-header">
-
-                <div>
-
-                    <span class="analysis-label">
-                        AI DOCUMENT ANALYSIS
-                    </span>
-
-                    <h2>
-                        Intelligent Insights
-                    </h2>
-
-                </div>
-
-                <span class="analysis-status success">
-                    <i class="bi bi-stars"></i>
-                    Complete
+                <span class="confidence-pill">
+                    {{ classification.confidence }}%
                 </span>
 
             </div>
 
-            <!-- Document Classification -->
+        </div>
 
-            <div class="ai-section">
+        <div class="analysis-card">
 
-                <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Key Information</h2>
 
-                    <div>
+            <div class="key-grid">
 
-                        <h3 class="mb-1">
-                            <i class="bi bi-file-earmark-text text-primary me-2"></i>
-                            Document Classification
-                        </h3>
+                <div class="key-card">
 
-                        <p class="text-muted mb-0">
-                            Automatically identified document type
-                        </p>
+                    <h4><i class="bi bi-calendar-event"></i> Dates</h4>
 
-                    </div>
+                    {% if key_information.dates %}
 
-                    <span class="badge bg-primary fs-6 px-3 py-2">
-                        {{ classification.confidence }}%
-                    </span>
+                        <ul>
 
-                </div>
+                            {% for date in key_information.dates %}
+                            <li>{{ date }}</li>
+                            {% endfor %}
 
-                <div class="border rounded-4 p-4">
+                        </ul>
 
-                    <h4 class="text-primary">
-                        {{ classification.type }}
-                    </h4>
-
-                    <p class="mb-0">
-                        {{ classification.description }}
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <hr class="my-4">
-
-
-            <!-- Summary -->
-
-            <div class="ai-section">
-
-                <h3 class="mb-3">
-                    <i class="bi bi-file-text text-primary me-2"></i>
-                    AI Summary
-                </h3>
-
-                <div class="border rounded-4 p-4 bg-light">
-
-                    <p class="mb-0" style="line-height:1.8;">
-                        {{ summary }}
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <hr class="my-4">
-
-
-            <!-- Key Information -->
-
-            <div class="ai-section">
-
-                <h3 class="mb-3">
-                    <i class="bi bi-info-circle text-primary me-2"></i>
-                    Key Information
-                </h3>
-
-                <div class="row g-3">
-
-                    <div class="col-md-6">
-
-                        <div class="border rounded-4 p-4 h-100">
-
-                            <h5>
-                                <i class="bi bi-calendar-event text-primary me-2"></i>
-                                Dates
-                            </h5>
-
-                            {% if key_information.dates %}
-
-                                <ul class="mb-0">
-
-                                    {% for date in key_information.dates %}
-
-                                        <li>{{ date }}</li>
-
-                                    {% endfor %}
-
-                                </ul>
-
-                            {% else %}
-
-                                <p class="text-muted mb-0">
-                                    No dates detected.
-                                </p>
-
-                            {% endif %}
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <div class="border rounded-4 p-4 h-100">
-
-                            <h5>
-                                <i class="bi bi-currency-rupee text-primary me-2"></i>
-                                Monetary Amounts
-                            </h5>
-
-                            {% if key_information.amounts %}
-
-                                <ul class="mb-0">
-
-                                    {% for amount in key_information.amounts %}
-
-                                        <li>{{ amount }}</li>
-
-                                    {% endfor %}
-
-                                </ul>
-
-                            {% else %}
-
-                                <p class="text-muted mb-0">
-                                    No monetary values detected.
-                                </p>
-
-                            {% endif %}
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <hr class="my-4">
-
-
-            <!-- Clause Detection -->
-
-            <div class="ai-section">
-
-                <h3 class="mb-3">
-                    <i class="bi bi-list-check text-primary me-2"></i>
-                    Detected Clauses
-                </h3>
-
-                {% if clauses %}
-
-                    <div class="row g-3">
-
-                        {% for clause in clauses %}
-
-                            <div class="col-md-6">
-
-                                <div class="border rounded-4 p-4 h-100">
-
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-
-                                        <h5 class="mb-0">
-                                            {{ clause.name }}
-                                        </h5>
-
-                                        <span class="badge bg-success">
-                                            Detected
-                                        </span>
-
-                                    </div>
-
-                                    <small class="text-muted">
-
-                                        Keywords:
-
-                                        {{ clause.matches|join(", ") }}
-
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        {% endfor %}
-
-                    </div>
-
-                {% else %}
-
-                    <div class="alert alert-secondary mb-0">
-
-                        No recognised legal clauses were detected.
-
-                    </div>
-
-                {% endif %}
-
-            </div>
-
-
-            <hr class="my-4">
-
-
-            <!-- Risk Analysis -->
-
-            <div class="ai-section">
-
-                <div class="d-flex justify-content-between align-items-center mb-3">
-
-                    <div>
-
-                        <h3 class="mb-1">
-                            <i class="bi bi-shield-exclamation text-primary me-2"></i>
-                            Risk Analysis
-                        </h3>
-
-                        <p class="text-muted mb-0">
-                            Potential legal concerns detected
-                        </p>
-
-                    </div>
-
-                    {% if risk_score is not none %}
-
-                        <div class="text-end">
-
-                            <div class="fs-3 fw-bold text-primary">
-                                {{ risk_score }}
-                            </div>
-
-                            <small>/100</small>
-
-                        </div>
-
+                    {% else %}
+                        <p>No dates found.</p>
                     {% endif %}
 
                 </div>
 
-                {% if risk_score is none %}
+                <div class="key-card">
 
-                    <div class="alert alert-info mb-0">
+                    <h4><i class="bi bi-currency-rupee"></i> Amounts</h4>
 
-                        This document has been identified as a
-                        <strong>{{ classification.type }}</strong>.
-                        Contract-specific risk analysis is not applicable.
+                    {% if key_information.amounts %}
 
-                    </div>
+                        <ul>
 
-                {% elif risks %}
+                            {% for amount in key_information.amounts %}
+                            <li>{{ amount }}</li>
+                            {% endfor %}
 
-                    <div class="row g-3">
+                        </ul>
 
-                        {% for risk in risks %}
+                    {% else %}
+                        <p>No monetary values found.</p>
+                    {% endif %}
 
-                            <div class="col-md-6">
+                </div>
 
-                                <div class="border rounded-4 p-4 h-100">
+            </div>
 
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
+        </div>
 
-                                        <h5 class="mb-0">
-                                            {{ risk.name }}
-                                        </h5>
+    </section>
 
-                                        {% if risk.level=="High" %}
+    <!-- RISKS -->
 
-                                            <span class="badge bg-danger">
-                                                High
-                                            </span>
+    <section id="risks" class="tab-content">
 
-                                        {% elif risk.level=="Medium" %}
+        <div class="analysis-card">
 
-                                            <span class="badge bg-warning text-dark">
-                                                Medium
-                                            </span>
+            <div class="risk-header">
 
-                                        {% else %}
+                <div>
 
-                                            <span class="badge bg-success">
-                                                Low
-                                            </span>
+                    <h2>Risk Analysis</h2>
+                    <p>{{ risk_level }} Risk</p>
 
-                                        {% endif %}
+                </div>
 
-                                    </div>
+                {% if risk_score is not none %}
+                    <div class="risk-score">{{ risk_score }}/100</div>
+                {% endif %}
 
-                                    <p class="mb-0">
-                                        {{ risk.reason }}
-                                    </p>
+            </div>
 
-                                </div>
+            {% if risks %}
+
+                <div class="risk-list">
+
+                    {% for risk in risks %}
+
+                        <div class="risk-item {{ risk.level|lower }}">
+
+                            <div>
+
+                                <h4>{{ risk.name }}</h4>
+                                <p>{{ risk.reason }}</p>
 
                             </div>
 
-                        {% endfor %}
+                            <span>{{ risk.level }}</span>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="alert alert-success">
+                    No predefined legal risks detected.
+                </div>
+
+            {% endif %}
+
+            <hr>
+
+            <h3>AI Recommendations</h3>
+
+            <div class="recommendation-list">
+
+                {% for rec in recommendations %}
+
+                    <div class="recommendation-card">
+
+                        <div>
+
+                            <h5>{{ rec.title }}</h5>
+                            <p>{{ rec.description }}</p>
+
+                        </div>
+
+                        <span class="priority {{ rec.priority|lower }}">
+                            {{ rec.priority }}
+                        </span>
 
                     </div>
 
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- CLAUSES -->
+
+    <section id="clauses" class="tab-content">
+
+        <div class="analysis-card">
+
+            <h2>Detected Clauses</h2>
+
+            <div class="chip-grid">
+
+                {% for clause in clauses %}
+
+                    <div class="clause-chip detected">
+                        <i class="bi bi-check-circle-fill"></i>
+                        {{ clause.name }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            <hr>
+
+            <h2>Missing Clauses</h2>
+
+            <div class="chip-grid">
+
+                {% if missing_clauses %}
+
+                    {% for clause in missing_clauses %}
+
+                        <div class="clause-chip missing">
+                            <i class="bi bi-x-circle-fill"></i>
+                            {{ clause.name }}
+                        </div>
+
+                    {% endfor %}
+
                 {% else %}
 
-                    <div class="alert alert-success mb-0">
-
-                        No predefined legal risk patterns were detected.
-
+                    <div class="alert alert-success">
+                        No important clauses appear to be missing.
                     </div>
 
                 {% endif %}
 
             </div>
 
-
-            <hr class="my-4">
-
-            <!-- Missing Clauses -->
-
-<div class="analysis-card">
-
-    <div class="analysis-card-header">
-
-        <div>
-
-            <span class="analysis-label">
-                MISSING CLAUSES
-            </span>
-
-            <h2>
-                Recommended Additions
-            </h2>
-
         </div>
 
-    </div>
+    </section>
 
-    {% if missing_clauses %}
+    <!-- SOURCE TEXT -->
 
-        <div class="risk-list">
-
-            {% for clause in missing_clauses %}
-
-            <div class="risk-item">
-
-                <div class="risk-left">
-
-                    <span class="risk-icon medium">
-                        <i class="bi bi-exclamation-circle"></i>
-                    </span>
-
-                    <div>
-
-                        <h4>{{ clause.name }}</h4>
-
-                        <p>{{ clause.importance }}</p>
-
-                    </div>
-
-                </div>
-
-                <span class="risk-badge medium">
-                    Missing
-                </span>
-
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    {% else %}
-
-        <div class="empty-state">
-
-            <i class="bi bi-check-circle-fill"></i>
-
-            <h4>No important clauses appear to be missing.</h4>
-
-        </div>
-
-    {% endif %}
-
-</div>
-
-
-            <!-- Recommendations -->
-
-            <div class="ai-section">
-
-                <h3 class="mb-3">
-                    <i class="bi bi-lightbulb text-primary me-2"></i>
-                    Recommendations
-                </h3>
-
-                <div class="border rounded-4 p-4 bg-light">
-
-                    <ul class="mb-0">
-
-                        <li>Review the highlighted clauses before signing.</li>
-
-                        <li>Verify important dates and monetary values.</li>
-
-                        <li>Confirm obligations assigned to each party.</li>
-
-                        <li>Seek professional legal advice for high-risk agreements.</li>
-
-                    </ul>
-
-                </div>
-
-            </div>
-
-
-            <hr class="my-4">
-
-
-            <!-- Disclaimer -->
-
-            <div class="analysis-disclaimer d-flex align-items-start gap-3">
-
-                <i class="bi bi-info-circle text-primary fs-4"></i>
-
-                <p class="mb-0 text-muted">
-
-                    This AI analysis is generated automatically to assist with
-                    document review. It should not be considered a substitute
-                    for professional legal advice.
-
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- ================= EXTRACTED TEXT ================= -->
+    <section id="text" class="tab-content">
 
         <div class="analysis-card">
 
             <div class="analysis-card-header">
 
-                <div>
+                <h2>Extracted Text</h2>
 
-                    <span class="analysis-label">
-                        SOURCE TEXT
-                    </span>
+                <button class="btn btn-outline-primary"
+                        onclick="copyExtractedText()">
 
-                    <h2>
-                        Extracted Text
-                    </h2>
+                    <i class="bi bi-copy"></i> Copy
 
-                </div>
-
-                <button
-                    type="button"
-                    class="btn btn-outline-primary"
-                    onclick="copyExtractedText()"
-                >
-                    <i class="bi bi-copy"></i>
-                    Copy
                 </button>
 
             </div>
 
-            <div
-                id="extractedText"
-                class="extracted-text"
-            >{{ extracted_text }}</div>
+            <div id="extractedText" class="extracted-text collapsed">
+                {{ extracted_text }}
+            </div>
+
+            <button class="btn btn-primary mt-3"
+                    onclick="toggleText()">
+
+                Show Full Text
+
+            </button>
 
         </div>
 
-    </div>
+    </section>
+
+</main>
+```
 
 </div>
 
-
 <script>
 
-function copyExtractedText() {
+document.querySelectorAll(".tab-btn").forEach(button=>{
 
-    const text =
-        document.getElementById(
-            "extractedText"
-        ).innerText;
+    button.onclick=()=>{
 
-    navigator.clipboard.writeText(text);
+        document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+
+        document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+
+        button.classList.add("active");
+
+        document.getElementById(button.dataset.tab).classList.add("active");
+
+    };
+
+});
+
+function copyExtractedText(){
+
+    navigator.clipboard.writeText(
+
+        document.getElementById("extractedText").innerText
+
+    );
+
+}
+
+function toggleText(){
+
+    const text=document.getElementById("extractedText");
+
+    text.classList.toggle("collapsed");
 
 }
 

@@ -1,9 +1,12 @@
 <p align="center">
- <h1 align="center" style="color: blue; font-family: 'Outfit', sans-serif;">
-<b>⚖️ LegalLens AI </b>
-</h1>
+  <h1 align="center">⚖️ LegalLens AI</h1>
   <p align="center">AI-Powered Legal Document Analyzer built with Flask, Python, MySQL & OCR</p>
 </p>
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
+![Flask](https://img.shields.io/badge/Flask-Backend-black?logo=flask)
+![MySQL](https://img.shields.io/badge/MySQL-Database-blue?logo=mysql)
+![Git](https://img.shields.io/badge/Git-Version_Control-orange?logo=git)
+
 # LegalLens AI – AI-Powered Legal Document Analyzer
 
 LegalLens AI is a full-stack web application that simplifies legal documents using AI-assisted analysis, OCR, and document processing. It helps users upload legal documents, identify important clauses, and generate easy-to-understand summaries.
@@ -46,9 +49,26 @@ run.py
 * Timeline extraction
 * Contract comparison
 
+## 📸 Screenshots
+
+### Landing Page
+![Landing](assets/landing.jpeg)
+### Dashboard
+![Dashboard](assets/dashboard.jpeg)
+### Upload
+![Upload](assets/upload.jpeg)
+### Analysis
+![Analysis](assets/analysis.jpeg)
+
+## 🚀 How to Run
+```bash
+git clone https://github.com/Bhoomikals20/LegalLens-AI.git
+cd LegalLens-AI
+pip install -r requirements.txt
+python run.py
+```
+
 ## Author
-
 **Bhoomika L S**
-
 * BE (CSE), MRIT
 * GitHub: Bhoomikals20
