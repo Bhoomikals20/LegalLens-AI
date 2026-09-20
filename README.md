@@ -1,9 +1,4 @@
-<p align="center">
- <h1 align="center" style="color: blue; font-family: 'Outfit', sans-serif;">
-<b>⚖️ LegalLens AI </b>
-</h1>
-  <p align="center">AI-Powered Legal Document Analyzer built with Flask, Python, MySQL & OCR</p>
-</p>
+
 # LegalLens AI – AI-Powered Legal Document Analyzer
 
 LegalLens AI is a full-stack web application that simplifies legal documents using AI-assisted analysis, OCR, and document processing. It helps users upload legal documents, identify important clauses, and generate easy-to-understand summaries.
