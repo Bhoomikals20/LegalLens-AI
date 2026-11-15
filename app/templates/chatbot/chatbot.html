@@ -56,7 +56,7 @@
 
             <!-- Chat Area -->
 
-            <div id="chatBox" class="chat-box">
+            <div id="chatBox" class="chat-box" role="log" aria-live="polite">
 
                 <div class="bot-message">
 
@@ -134,7 +134,7 @@
 
                 ></textarea>
 
-                <button onclick="askQuestion()">
+                <button id="sendButton" type="button" aria-label="Send message" onclick="askQuestion()">
 
                     <i class="bi bi-send-fill"></i>
 
@@ -426,6 +426,14 @@ font-size:20px;
 
 }
 
+.chat-input button:disabled{
+
+opacity:.6;
+
+cursor:wait;
+
+}
+
 .typing{
 
 display:flex;
@@ -495,6 +503,7 @@ minute:"2-digit"
 async function askQuestion(){
 
 const input=document.getElementById("questionInput");
+const sendButton=document.getElementById("sendButton");
 
 const question=input.value.trim();
 
@@ -504,35 +513,24 @@ if(!question)return;
 
 const chat=document.getElementById("chatBox");
 
-chat.innerHTML+=`
-<div class="user-message">
-<div class="message">
-<strong>You</strong>
-<p>${question}</p>
-<span>${currentTime()}</span>
-</div>
-<div class="avatar user-avatar"><i class="bi bi-person"></i></div>
-</div>`;
-
-chat.innerHTML+=`
-<div id="typing" class="bot-message">
-<div class="avatar"><i class="bi bi-stars"></i></div>
-<div class="message typing">
-<span></span><span></span><span></span>
-</div>
-</div>`;
+appendMessage("user", question);
+appendTypingIndicator();
 
 chat.scrollTop=chat.scrollHeight;
 
 input.value="";
+input.disabled=true;
+sendButton.disabled=true;
 
-const response=await fetch("/chat/ask",{
+try {
+const response=await fetch({{ url_for("chatbot.ask")|tojson }},{
 
 method:"POST",
 
 headers:{
 
-"Content-Type":"application/x-www-form-urlencoded"
+"Content-Type":"application/x-www-form-urlencoded",
+"X-CSRFToken":document.querySelector('meta[name="csrf-token"]').content
 
 },
 
@@ -546,22 +544,77 @@ document_id:documentId
 
 });
 
-const data=await response.json();
+let data;
+try {
+    data=await response.json();
+} catch (error) {
+    data={answer:"The server returned an unexpected response. Please try again."};
+}
 
-document.getElementById("typing").remove();
+if (!response.ok) {
+    appendMessage("assistant", data.answer || "The request could not be completed.");
+    return;
+}
 
-chat.innerHTML+=`
-<div class="bot-message">
-<div class="avatar"><i class="bi bi-stars"></i></div>
-<div class="message">
-<strong>LegalLens AI</strong>
-<p>${data.answer}</p>
-<span>${currentTime()}</span>
-</div>
-</div>`;
+appendMessage("assistant", data.answer || "No response was returned.");
+} catch (error) {
+    appendMessage("assistant", "Couldn't send your message. Please try again.");
+} finally {
+    document.getElementById("typing")?.remove();
+    input.disabled=false;
+    sendButton.disabled=false;
+    input.focus();
+    chat.scrollTop=chat.scrollHeight;
+}
 
-chat.scrollTop=chat.scrollHeight;
+}
 
+function appendMessage(role, text) {
+const chat=document.getElementById("chatBox");
+const row=document.createElement("div");
+row.className=role==="user" ? "user-message" : "bot-message";
+
+const avatar=document.createElement("div");
+avatar.className=role==="user" ? "avatar user-avatar" : "avatar";
+const icon=document.createElement("i");
+icon.className=role==="user" ? "bi bi-person" : "bi bi-stars";
+avatar.appendChild(icon);
+
+const message=document.createElement("div");
+message.className="message";
+const label=document.createElement("strong");
+label.textContent=role==="user" ? "You" : "LegalLens AI";
+const paragraph=document.createElement("p");
+paragraph.textContent=String(text);
+const timestamp=document.createElement("span");
+timestamp.textContent=currentTime();
+message.append(label, paragraph, timestamp);
+
+if (role==="user") {
+    row.append(message, avatar);
+} else {
+    row.append(avatar, message);
+}
+chat.appendChild(row);
+}
+
+function appendTypingIndicator() {
+const chat=document.getElementById("chatBox");
+const row=document.createElement("div");
+row.id="typing";
+row.className="bot-message";
+const avatar=document.createElement("div");
+avatar.className="avatar";
+const icon=document.createElement("i");
+icon.className="bi bi-stars";
+avatar.appendChild(icon);
+const message=document.createElement("div");
+message.className="message typing";
+for (let index=0; index<3; index+=1) {
+    message.appendChild(document.createElement("span"));
+}
+row.append(avatar, message);
+chat.appendChild(row);
 }
 
 document.getElementById("questionInput").addEventListener("keydown",function(e){

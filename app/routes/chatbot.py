@@ -1,24 +1,14 @@
-import os
-
-import google.generativeai as genai
+import httpx2
+from google import genai
+from google.genai import errors, types
 from flask import Blueprint, current_app, jsonify, render_template, request, session
 from flask_login import current_user, login_required
 
 from app.models.document import Document
 from app.routes.analysis import analyze_file
+from app.utils.document_storage import get_document_file_path
 
 chatbot_bp = Blueprint("chatbot", __name__)
-
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-model = genai.GenerativeModel(
-    "gemini-2.5-flash-lite",
-    generation_config={
-        "temperature": 0.7,
-        "max_output_tokens": 120,
-        "top_p": 0.9,
-    },
-)
 
 
 @chatbot_bp.route("/chat")
@@ -37,6 +27,7 @@ def chat():
     return render_template(
         "chatbot/chatbot.html",
         documents=documents,
+        username=current_user.full_name,
     )
 
 
@@ -66,31 +57,35 @@ def ask():
     if q in quick:
         return jsonify({"answer": quick[q]})
 
+    api_key = current_app.config.get("GEMINI_API_KEY")
+    if isinstance(api_key, str):
+        api_key = api_key.strip()
+
+    if not api_key:
+        return jsonify({"answer": "Chat is unavailable until GEMINI_API_KEY is configured."}), 503
+
     document_context = ""
 
     if document_id:
+        try:
+            selected_document_id = int(document_id)
+        except (TypeError, ValueError):
+            return jsonify({"answer": "The selected document is unavailable."}), 404
 
         document = Document.query.filter_by(
-            id=document_id,
+            id=selected_document_id,
             user_id=current_user.id,
         ).first()
+        if document is None:
+            return jsonify({"answer": "The selected document is unavailable."}), 404
 
-        if document:
+        try:
+            file_path = get_document_file_path(document)
+        except (FileNotFoundError, ValueError):
+            return jsonify({"answer": "The selected document is unavailable."}), 404
 
-            upload_folder = os.path.join(
-                current_app.root_path,
-                "static",
-                "uploads",
-            )
-
-            file_path = os.path.join(
-                upload_folder,
-                document.filename,
-            )
-
-            result = analyze_file(file_path)
-
-            document_context = result.get("text", "")[:2500]
+        result = analyze_file(file_path)
+        document_context = result.get("text", "")[:2500]
 
     history = session.get("chat_history", [])
 
@@ -121,13 +116,48 @@ User:
 """
 
     try:
+        client = genai.Client(api_key=api_key)
+        response = client.models.generate_content(
+            model="gemini-3.5-flash-lite",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                temperature=0.7,
+                max_output_tokens=120,
+                top_p=0.9,
+            ),
+        )
+    except errors.APIError as error:
+        current_app.logger.warning(
+            "Gemini request failed with API status %s.", error.code
+        )
 
-        response = model.generate_content(prompt)
+        if error.code in (401, 403):
+            answer = (
+                "Gemini rejected the configured API key or model access. "
+                "Check the key and Google AI Studio project permissions."
+            )
+        elif error.code == 404:
+            answer = "The configured Gemini model is unavailable. Please check the model configuration."
+        elif error.code == 429:
+            answer = "Gemini's rate limit has been reached. Please wait a moment and try again."
+        elif isinstance(error.code, int) and error.code >= 500:
+            answer = "The AI provider is temporarily unavailable. Please try again."
+        else:
+            answer = "Gemini could not process this request. Please try again."
 
-        answer = response.text.strip()
+        return jsonify({"answer": answer}), 503
+    except httpx2.HTTPError as error:
+        current_app.logger.warning(
+            "Gemini request failed with transport error %s.",
+            type(error).__name__,
+        )
+        return jsonify(
+            {"answer": "The AI provider could not be reached. Please try again."}
+        ), 503
 
-    except Exception:
-        answer = "Couldn't generate a response right now."
+    answer = (response.text or "").strip()
+    if not answer:
+        return jsonify({"answer": "The AI service returned an empty response."}), 502
 
     history.append({"role": "User", "text": question})
     history.append({"role": "Assistant", "text": answer})
